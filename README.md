@@ -1,5 +1,8 @@
-Plugin structure
-================
+[![Build Status](https://travis-ci.org/dickeyxxx/heroku-redis-cloud-plugin-example?branch=master)](https://travis-ci.org/dickeyxxx/heroku-redis-cloud-plugin-example)
+[![npm version](https://badge.fury.io/js/heroku-redis-cloud-plugin-example.svg)](http://badge.fury.io/js/heroku-redis-cloud-plugin-example)
+
+Example Redis Plugin Structure
+==============================
 
 Toolbelt 4.0 plugins are simple node modules that export a single JavaScript object `topics`. A basic plugin exporting the command `heroku apps:status` would have a basic `package.json` file such as the following:
 
