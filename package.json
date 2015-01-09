@@ -1,0 +1,27 @@
+{
+  "name": "heroku-redis-cloud-plugin-example",
+  "version": "1.0.0",
+  "description": "heroku plugin to manage redis cloud",
+  "main": "index.js",
+  "author": "Jeff Dickey @dickeyxxx",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dickeyxxx/heroku-redis-cloud-plugin-example"
+  },
+  "bugs": {
+    "url": "https://github.com/dickeyxxx/heroku-redis-cloud-plugin-example/issues"
+  },
+  "keywords": [
+    "heroku-plugin"
+  ],
+  "license": "ISC",
+  "scripts": {
+    "test": "jshint . && mocha"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jshint": "*",
+    "netrc": "*"
+  }
+}
