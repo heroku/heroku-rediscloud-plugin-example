@@ -23,8 +23,10 @@
     "redis": "^0.12.1"
   },
   "devDependencies": {
+    "chai": "*",
     "heroku-cli-util": "^1.4.0",
     "jshint": "*",
+    "mocha": "*",
     "netrc": "*"
   }
 }
