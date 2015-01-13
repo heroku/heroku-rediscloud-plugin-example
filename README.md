@@ -1,128 +1,79 @@
 [![Build Status](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example.svg?branch=master)](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example)
 [![npm version](https://badge.fury.io/js/heroku-rediscloud-plugin-example.svg)](http://badge.fury.io/js/heroku-rediscloud-plugin-example)
 
-Example Redis Plugin Structure
-==============================
+Heroku RedisCloud Plugin Example
+================================
 
-Toolbelt 4.0 plugins are simple node modules that export a single JavaScript object `topics`. A basic plugin exporting the command `heroku apps:status` would have a basic `package.json` file such as the following:
+This is an example plugin to demonstrate how to build Heroku Toolbelt 4.0 plugins. For a simpler example, check out [heroku-hello-world](https://github.com/dickeyxxx/heroku-hello-world).
 
-```json
-{
-  "name": "heroku-production-check",
-  "version": "0.0.2",
-  "description": "Heroku plugin to check to see if a Heroku app is production ready",
-  "main": "index.js",
-  "author": "Jeff Dickey @dickeyxxx",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dickeyxxx/heroku-production-check"
-  },
-  "bugs": {
-    "url": "https://github.com/dickeyxxx/heroku-production-check/issues"
-  },
-  "keywords": [
-    "heroku-plugin"
-  ],
-  "license": "ISC",
-  "scripts": {
-    "test": "node test.js"
-  },
-  "dependencies": {
-    "colors": "^1.0.3",
-    "request": "^2.48.0"
-  },
-  "devDependencies": {
-    "netrc": "^0.1.3"
-  }
-}
+You can test this plugin by installing it:
+
+```sh
+$ heroku plugins:install heroku-rediscloud-plugin-example
+$ heroku help rediscloud
 ```
 
-Including the keyword `heroku-plugin` will later help us find all plugins in the wild.
+Structure
+=========
 
-The `main` property specifies the file that should export the `topics` object. Here is an example of a simple `index.js` main entry point:
+This plugin has a basic `index.js` that exports `topics` and `commands`:
 
 ```javascript
-var api = require('request').defaults({
-  json: true,
-  headers: { 'Accept': 'application/vnd.heroku+json; version=edge' }
-})
-var colors = require('colors')
+exports.topics = [{
+  name: 'rediscloud',
+  description: 'manages a rediscloud instance'
+}];
 
-exports.topics = [
-  {
-    name: 'apps',
-    commands: [
-      {
-        name: 'status',
-        shortHelp: 'get status of a production app',
-        needsApp: true,
-        needsAuth: true,
-        help: "\
-Get the status of a production app.\n\
-\n\
-Examples:\n\
-  $ heroku heroku-production-check\n\
-  Status: green",
-
-        // Called with heroku heroku-production-check
-        //   context: The Heroku context object which would be something like this:
-        //            {
-        //              "app": "shielded-chamber-4849",
-        //              "auth": { "user": "username", "password": "theapitoken"},
-        //              "args": {} // arguments passed
-        //            }
-        run: function (context) {
-          api = api.defaults({auth: context.auth})
-          api.get({
-            uri: 'https://production-check-api.herokuapp.com/production-checks/'+context.app,
-            auth: {user: "", password: context.auth.password},
-            json: true
-          }, function (err, _, checks) {
-            if (err) { throw err }
-            if (checks.message) { return console.error(checks.message) }
-            Object.keys(checks).forEach(function (key) {
-              printStatusCheck(checks[key])
-            })
-          })
-        }
-      }
-    ]
-  }
-]
-
-function printStatusCheck(check) {
-  var color = colors.white
-  switch (check.status) {
-    case 'passed':
-      color = colors.green
-      icon = 'âœ“'
-      break
-    case 'failed':
-      color = colors.red
-      icon = 'âœ—'
-      break
-    case 'warning':
-      color = colors.yellow
-      icon = 'âš '
-      break
-    case 'skipped':
-      color = colors.gray
-      icon = 'â€¦'
-      break
-  }
-  console.log('%s %s', check.title.yellow, color(icon))
-  console.log('  %s\n', check.devCenterURL.underline)
-
-  if (check.message) {
-    console.log(color('  ' + check.message))
-  }
-  console.log()
-}
+exports.commands = [
+  require('./lib/commands/redis/clear')
+];
 ```
 
-Running Plugins
-===============
+We then use node's require to pull in the clear command from `./lib/commands/redis/clear`:
 
-When the CLI loads, it will run all the plugins in `~/.heroku/node_modules` checking for this `topics` object. For each one it will add the command to the existing command set.
+```javascript
+var url    = require('url');
+var Heroku = require('heroku-client');
+var redis  = require('redis');
 
-    $ heroku apps:status
+module.exports = {
+  topic: 'rediscloud',
+  command: 'clear',
+  description: 'clears out the data in the redis cloud instance (flushall)',
+  help: "clears out the data in the redis cloud instance (flushall) \n\
+Example:\n\n\
+  $ heroku rediscloud:clear\n\
+  cleared out all keys",
+  needsApp: true,  // This command needs to be associated with an app (passed in the context argument)
+  needsAuth: true, // This command needs an auth token to interact with the Heroku API (passed in the context argument)
+  run: function (context) {
+
+    // Get an authenticated API object
+    var heroku = new Heroku({token: context.auth.password});
+
+    // Get the config vars for the app
+    heroku.apps(context.app).configVars().info(function (err, config) {
+      if (err) { throw err; }
+      if (!config.REDISCLOUD_URL) {
+        console.error('App does not have REDISCLOUD_URL');
+        process.exit(1);
+      }
+
+      // connect to the redis db
+      var redisUrl = url.parse(config.REDISCLOUD_URL);
+      var conn = redis.createClient(redisUrl.port, redisUrl.hostname, {
+        auth_pass: redisUrl.auth.split(':')[1]
+      });
+
+      // flush the db (empties all keys)
+      conn.flushall(function (err) {
+        if (err) { throw err; }
+        console.log('cleared out all keys');
+
+        // cleanly close the redis connection
+        conn.quit();
+      });
+    });
+  },
+};
+```
