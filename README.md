@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example.svg?branch=master)](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example)
+[![Build Status](https://travis-ci.org/heroku/heroku-rediscloud-plugin-example.svg?branch=master)](https://travis-ci.org/heroku/heroku-rediscloud-plugin-example)
 [![npm version](https://badge.fury.io/js/heroku-rediscloud-plugin-example.svg)](http://badge.fury.io/js/heroku-rediscloud-plugin-example)
 
 Heroku RedisCloud Plugin Example
 ================================
 
-This is an example plugin to demonstrate how to build Heroku Toolbelt 4.0 plugins. For a simpler example, check out [heroku-hello-world](https://github.com/dickeyxxx/heroku-hello-world).
+This is an example plugin to demonstrate how to build Heroku Toolbelt 4.0 plugins. For a simpler example, check out [heroku-hello-world](https://github.com/heroku/heroku-hello-world).
 
 You can test this plugin by installing it:
 
