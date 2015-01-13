@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example?branch=master)](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example)
+[![Build Status](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example.svg?branch=master)](https://travis-ci.org/dickeyxxx/heroku-rediscloud-plugin-example)
 [![npm version](https://badge.fury.io/js/heroku-rediscloud-plugin-example.svg)](http://badge.fury.io/js/heroku-rediscloud-plugin-example)
 
 Example Redis Plugin Structure
