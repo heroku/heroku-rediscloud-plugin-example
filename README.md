@@ -31,6 +31,6 @@ exports.commands = [
 ];
 ```
 
-We then use node's require to pull in the commands in [./lib/commands/](./lib/commands/). Each command outputs some metadata like help text, arguments, etc. Check the files out inside this repo to see more details.
+We then use node's require to pull in the commands in [./lib/commands/redis](./lib/commands/redis/). Each command outputs some metadata like help text, arguments, etc. Check the files out inside this repo to see more details.
 
 Also check out the attributes set in [package.json](./package.json).
