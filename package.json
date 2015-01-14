@@ -1,6 +1,6 @@
 {
   "name": "heroku-rediscloud-plugin-example",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "heroku plugin to manage redis cloud",
   "main": "index.js",
   "author": "Jeff Dickey @dickeyxxx",
