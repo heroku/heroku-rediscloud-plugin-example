@@ -25,55 +25,12 @@ exports.topics = [{
 }];
 
 exports.commands = [
-  require('./lib/commands/redis/clear')
+  require('./lib/commands/redis/clear'),
+  require('./lib/commands/redis/get'),
+  require('./lib/commands/redis/set')
 ];
 ```
 
-We then use node's require to pull in the clear command from `./lib/commands/redis/clear`:
+We then use node's require to pull in the commands in [./lib/commands/](./lib/commands/). Each command outputs some metadata like help text, arguments, etc. Check the files out inside this repo to see more details.
 
-```javascript
-var url    = require('url');
-var Heroku = require('heroku-client');
-var redis  = require('redis');
-
-module.exports = {
-  topic: 'rediscloud',
-  command: 'clear',
-  description: 'clears out the data in the redis cloud instance (flushall)',
-  help: "clears out the data in the redis cloud instance (flushall) \n\
-Example:\n\n\
-  $ heroku rediscloud:clear\n\
-  cleared out all keys",
-  needsApp: true,  // This command needs to be associated with an app (passed in the context argument)
-  needsAuth: true, // This command needs an auth token to interact with the Heroku API (passed in the context argument)
-  run: function (context) {
-
-    // Get an authenticated API object
-    var heroku = new Heroku({token: context.auth.password});
-
-    // Get the config vars for the app
-    heroku.apps(context.app).configVars().info(function (err, config) {
-      if (err) { throw err; }
-      if (!config.REDISCLOUD_URL) {
-        console.error('App does not have REDISCLOUD_URL');
-        process.exit(1);
-      }
-
-      // connect to the redis db
-      var redisUrl = url.parse(config.REDISCLOUD_URL);
-      var conn = redis.createClient(redisUrl.port, redisUrl.hostname, {
-        auth_pass: redisUrl.auth.split(':')[1]
-      });
-
-      // flush the db (empties all keys)
-      conn.flushall(function (err) {
-        if (err) { throw err; }
-        console.log('cleared out all keys');
-
-        // cleanly close the redis connection
-        conn.quit();
-      });
-    });
-  },
-};
-```
+Also check out the attributes set in [package.json](./package.json).

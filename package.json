@@ -19,7 +19,7 @@
     "test": "jshint . && mocha"
   },
   "dependencies": {
-    "heroku-client": "^1.9.0",
+    "heroku-client": "^1.9.1",
     "redis": "^0.12.1"
   },
   "devDependencies": {
