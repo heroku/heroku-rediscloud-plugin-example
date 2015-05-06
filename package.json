@@ -19,12 +19,11 @@
     "test": "jshint . && mocha"
   },
   "dependencies": {
-    "heroku-client": "^1.9.1",
+    "heroku-cli-util": "^1.10.4",
     "redis": "^0.12.1"
   },
   "devDependencies": {
     "chai": "*",
-    "heroku-cli-util": "^1.4.0",
     "jshint": "*",
     "mocha": "*",
     "netrc": "*"
