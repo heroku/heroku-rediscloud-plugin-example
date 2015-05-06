@@ -25,12 +25,12 @@ exports.topics = [{
 }];
 
 exports.commands = [
-  require('./lib/commands/redis/clear'),
-  require('./lib/commands/redis/get'),
-  require('./lib/commands/redis/set')
+  require('./commands/redis/clear'),
+  require('./commands/redis/get'),
+  require('./commands/redis/set')
 ];
 ```
 
-We then use node's require to pull in the commands in [./lib/commands/redis](./lib/commands/redis/). Each command outputs some metadata like help text, arguments, etc. Check the files out inside this repo to see more details.
+We then use node's require to pull in the commands in [./commands/redis](./commands/redis/). Each command outputs some metadata like help text, arguments, etc. Check the files out inside this repo to see more details.
 
 Also check out the attributes set in [package.json](./package.json).
