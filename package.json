@@ -1,7 +1,7 @@
 {
   "name": "heroku-rediscloud-plugin-example",
   "description": "heroku plugin to manage redis cloud",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": "Jeff Dickey @dickeyxxx",
   "bugs": {
     "url": "https://github.com/heroku/heroku-rediscloud-plugin-example/issues"
